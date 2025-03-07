@@ -1,0 +1,1 @@
+// This script runs when the popup is opened.
