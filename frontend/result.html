@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <link href="result.css" rel="stylesheet" />
+    <title>Fact Check Extension</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">
+                <span class="title-text">Fact Check Extension</span>
+            </div>
+        </div>
+
+        <div class="result">
+            <div class="segment result-input">
+                <div class="result-title">
+                    <div class="title-content">
+                        <span class="result-heading">Fact Check Result</span>
+                    </div>
+                </div>
+                <div class="input-details">
+                    <div class="input-message">
+                        <span class="message-text">Congratulations on winning this exclusive iPad Mini! Please click here to redeem your prize</span>
+                    </div>
+                </div>
+            </div>
+
+            <!--Result status will change based on results-->
+            <div class="result-status" id="resultStatus">
+                <div class="status-info">
+                    <span class="status-heading" id="statusHeading">Checking...</span>
+                    <div class="status-verification">
+                        <div class="verification-status" id="verificationStatus">
+                            <span class="verification-label" id="verificationLabel">Loading...</span>
+                        </div>
+                    </div>
+                    <span class="status-explanation" id="statusExplanation">Analyzing message...</span>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="action-buttons">
+            <div class="button back">
+                <span class="text">Back</span>
+            </div>
+            <div class="button share">
+                <span class="text">Share Result</span>
+            </div>
+        </div>
+    </div>
+    <script src="result.js"></script>
+</body>
+
+</html>
