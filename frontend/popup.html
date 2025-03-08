@@ -21,7 +21,7 @@
                 <span class="option-text">Snip for Deepfake</span>
             </div>
 
-            <div class="box select">
+            <div class="box select" id="searchButton">
                 <div class="icon-container">
                     <img src="assets/search.png" alt="search-icon">
                 </div>
@@ -29,7 +29,25 @@
             </div>
         </div>
 
-        <!-- <div class="statistics-section">
+        <!-- Hidden input box -->
+        <div class="input-section" id="inputSection" style="display: none;">
+            <div class="input-container" id="inputContainer">
+                <div class="input-bar">
+                    <textarea class="input-box" placeholder="Type your text here..."></textarea>
+                    <button id="submitButton">Check</button>
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
+
+<!-- 
+        <div class="statistics-section">
             <div class="stat-header">
                     <span>Statistics</span>
             </div>
@@ -47,26 +65,7 @@
                     <span class="stat-percentage">+8%</span>
                 </div>
             </div>
-        </div> -->
-    </div>
-    <script src="popup.js"></script>
-</body>
-
-</html>
-
-<!-- 
-        <div class="search-section">
-            <div class="search-container">
-                <span class="search-title">Search Fact Checks</span>
-                <div class="search-bar">
-                    <div class="search-box">
-                        <div class="input-box"></div>
-                    </div>
-                </div>
-            </div>
-            <span class="search-description">Find verified sources</span>
         </div>
-
         <div class="latest-fact-checks">
             <div class="section-header">
                 <div class="section-title">

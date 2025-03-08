@@ -12,3 +12,15 @@ document.getElementById('snipButton').addEventListener('click', () => {
       window.close();
     });
   });
+
+const inputSection = document.getElementById('inputSection');
+// Show the input section when the search button is clicked
+document.getElementById('searchButton').addEventListener('click', function() {
+    if (inputSection.style.display === 'none' || inputSection.style.display === '') {
+        inputSection.style.display = 'block';
+    } else {
+        inputSection.style.display = 'none';
+    }
+});
+
+
