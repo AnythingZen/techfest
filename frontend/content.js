@@ -1,4 +1,8 @@
-(function () {
+(async function () {
+	const { updateVerificationStatus, resetVerificationStatus } = await import(
+		chrome.runtime.getURL("result.js")
+	);
+
 	// State object to track selection
 	const snippingState = {
 		isSelecting: false,
@@ -158,7 +162,10 @@
 					.then((response) => response.json())
 					.then((data) => {
 						console.log("Response from backend:", data);
-						showResult(data.isDeepfake);
+						updateVerificationStatus(data.isDeepfake);
+						setTimeout(() => {
+							resetVerificationStatus();
+						}, 3000);
 					})
 					.catch((error) => {
 						console.error("Error sending image to backend:", error);
@@ -171,25 +178,5 @@
 		};
 
 		img.src = dataUrl;
-	}
-
-	// Show the result
-	function showResult(isDeepfake) {
-		const resultDiv = document.createElement("div");
-		resultDiv.textContent = `Result: ${
-			isDeepfake ? "Deepfake Detected!" : "Authentic"
-		}`;
-		resultDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px;
-        background: ${isDeepfake ? "#ff4444" : "#4CAF50"};
-        color: white;
-        z-index: 1000000;
-        border-radius: 5px;
-      `;
-		document.body.appendChild(resultDiv);
-		setTimeout(() => resultDiv.remove(), 3000);
 	}
 })();

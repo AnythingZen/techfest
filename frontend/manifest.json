@@ -1,17 +1,24 @@
 {
-    "manifest_version": 3,
-    "name": "Deepfake Snip Checker",
-    "version": "1.0",
-    "permissions": ["activeTab", "scripting"],
-    "action": {
-      "default_icon": {
-        "16": "assets/icon16.png"
-      },
-      "default_title": "Click to check for deepfakes",
-      "default_popup": "popup.html"
-    },
-    "background": {
-      "service_worker": "background.js"
-    }
-    
-  }
+	"manifest_version": 3,
+	"name": "Deepfake Snip Checker",
+	"version": "1.0",
+	"permissions": ["activeTab", "scripting"],
+	"action": {
+		"default_icon": {
+			"16": "assets/icon16.png",
+			"48": "assets/icon48.png",
+			"128": "assets/icon128.png"
+		},
+		"default_title": "Click to check for deepfakes",
+		"default_popup": "popup.html"
+	},
+	"background": {
+		"service_worker": "background.js"
+	},
+	"web_accessible_resources": [
+		{
+			"resources": ["result.js"],
+			"matches": ["<all_urls>"]
+		}
+	]
+}
