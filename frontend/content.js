@@ -89,6 +89,8 @@ if (!document.getElementById('snipping-overlay')) {
   
   function processScreenshot(dataUrl, rect) {
     const img = new Image();
+    img.src = dataUrl;
+    
     img.onload = () => {
       const dpr = window.devicePixelRatio;
       const scaledRect = {
@@ -110,7 +112,7 @@ if (!document.getElementById('snipping-overlay')) {
         const formData = new FormData();
         formData.append('image', blob, 'snip.png');
   
-        fetch('https://your-backend.com/check', {
+        fetch('https://baad-104-196-54-241.ngrok-free.app/predict', {
           method: 'POST',
           body: formData
         })
@@ -121,7 +123,6 @@ if (!document.getElementById('snipping-overlay')) {
         .catch(console.error);
       }, 'image/png');
     };
-    img.src = dataUrl;
   }
   
   function showResult(isDeepfake) {

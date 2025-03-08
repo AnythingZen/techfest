@@ -5,9 +5,9 @@
     "permissions": ["activeTab", "scripting"],
     "action": {
       "default_icon": {
-        "16": "icons/icon16.jpeg"
+        "16": "icons/icon16.png"
       },
-      "default_title": "Deepfake Detector",
+      "default_title": "Click to check for deepfakes",
       "default_popup": "popup.html"
     },
     "background": {
