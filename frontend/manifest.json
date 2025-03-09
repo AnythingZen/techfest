@@ -2,7 +2,8 @@
 	"manifest_version": 3,
 	"name": "Deepfake Snip Checker",
 	"version": "1.0",
-	"permissions": ["activeTab", "scripting"],
+	"permissions": ["activeTab", "scripting", "tabs"],
+  "host_permissions": ["<all_urls>"],
 	"action": {
 		"default_icon": {
 			"16": "assets/icon16.png",
@@ -17,8 +18,14 @@
 	},
 	"web_accessible_resources": [
 		{
-			"resources": ["result.js"],
+			"resources": ["styles/result.css", "result.html", "result.js"],
 			"matches": ["<all_urls>"]
 		}
-	]
+	],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["styles/result.css"]
+    }
+  ]
 }

@@ -1,5 +1,11 @@
 // Display output based on results
 function updateVerificationStatus(isVerified) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = chrome.runtime.getURL("styles/result.css");
+    document.head.appendChild(link);
+
+    console.log('updateVerificationStatus called with:', isVerified);
 	const resultStatus = document.getElementById("resultStatus");
 	const statusHeading = document.getElementById("statusHeading");
 	const verificationLabel = document.getElementById("verificationLabel");
