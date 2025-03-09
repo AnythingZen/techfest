@@ -1,61 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			* {
+				box-sizing: border-box;
+			}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
-    <title>Fact Check Extension</title>
-</head>
+			body {
+				margin: 0;
+				padding: 0;
+				font-family: "Roboto", sans-serif;
+			}
 
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="header-title">
-                <span class="title-text">Fact Check Extension</span>
-            </div>
-        </div>
+			.container {
+				position: fixed; /* Fixed position to stay on screen */
+				top: 30%; 
+				left: 50%; /* Center horizontally */
+				transform: translate(-50%, -50%); /* Perfect centering */
+				width: 360px;
+				background: #fff;
+				display: flex;
+				flex-direction: column;
+				padding: 16px;
+				box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+				border-radius: 8px;
+				z-index: 1000; /* Ensure it's above everything */
+			}
 
-        <div class="result">
-            <div class="segment result-input">
-                <div class="result-title">
-                    <div class="title-content">
-                        <span class="result-heading">Fact Check Result</span>
-                    </div>
-                </div>
-                <div class="input-details">
-                    <div class="input-message">
-                        <span class="message-text">Congratulations on winning this exclusive iPad Mini! Please click here to redeem your prize</span>
-                    </div>
-                </div>
-            </div>
+			.header {
+				width: 100%;
+				height: 48px;
+				background: #fff;
+				display: flex;
+				align-items: center;
+				padding: 0 16px;
+				border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+			}
 
-            <!--Result status will change based on results-->
-            <div class="result-status" id="resultStatus">
-                <div class="status-info">
-                    <span class="status-heading" id="statusHeading">Checking...</span>
-                    <div class="status-verification">
-                        <div class="verification-status" id="verificationStatus">
-                            <span class="verification-label" id="verificationLabel">Loading...</span>
-                        </div>
-                    </div>
-                    <span class="status-explanation" id="statusExplanation">Analyzing message...</span>
-                </div>
-            </div>
-            
-        </div>
+			.header-title .title-text {
+				color: #000;
+				font-size: 20px;
+				font-weight: 500;
+				text-align: left;
+			}
 
-        <div class="action-buttons">
-            <div class="button back">
-                <span class="text">Back</span>
-            </div>
-            <div class="button share">
-                <span class="text">Share Result</span>
-            </div>
-        </div>
-    </div>
-    <script src="result.js"></script>
-    <script src="popup.js"></script>
-</body>
+			.result {
+				width: 100%;
+				padding: 12px;
+			}
 
+			.result-title {
+				width: 100%;
+				padding-bottom: 8px;
+			}
+
+			.result-heading {
+				font-size: 14px;
+				font-weight: 500;
+				color: #000;
+			}
+
+			.input-details {
+				width: 100%;
+				background: rgba(0, 0, 0, 0.05);
+				padding: 12px;
+				border-radius: 6px;
+				margin: 12px 0;
+			}
+
+			.message-text {
+				font-size: 14px;
+				font-weight: 400;
+				color: #000;
+			}
+
+			.result-status {
+				width: 100%;
+				padding: 12px;
+				border-radius: 6px;
+				margin: 12px 0;
+			}
+
+			.status-heading {
+				font-size: 16px;
+				font-weight: 500;
+			}
+
+			.status-verification {
+				margin-top: 6px;
+			}
+
+			.verification-status {
+				display: inline-block;
+				background: rgba(0, 0, 0, 0.05);
+				padding: 2px 6px;
+				border-radius: 4px;
+				font-size: 12px;
+			}
+
+			.status-explanation {
+				font-size: 12px;
+				font-weight: 400;
+				color: #000;
+				margin-top: 6px;
+			}
+
+			.action-buttons {
+				display: flex;
+				justify-content: space-between;
+				padding: 12px;
+			}
+
+			.button {
+				width: 48%;
+				height: 42px;
+				background: #f5f5f5;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 8px;
+				cursor: pointer;
+				transition: background 0.2s ease-in-out;
+			}
+
+			.button:hover {
+				background: #e0e0e0;
+			}
+
+			.text {
+				font-size: 16px;
+				font-weight: 500;
+				color: #000;
+			}
+		</style>
+		<title>Fact Check Extension</title>
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="header">
+				<div class="header-title">
+					<span class="title-text">Fact Check Extension</span>
+				</div>
+			</div>
+
+			<div class="result">
+				<div class="segment result-input">
+					<div class="result-title">
+						<div class="title-content">
+							<span class="result-heading"
+								>Fact Check Result</span
+							>
+						</div>
+					</div>
+					<!-- <div class="input-details">
+						<div class="input-message">
+							<span class="message-text"
+								>Congratulations on winning this exclusive iPad
+								Mini! Please click here to redeem your
+								prize</span
+							>
+						</div>
+					</div> -->
+				</div>
+
+				<!--Result status will change based on results-->
+				<div class="result-status" id="resultStatus">
+					<div class="status-info">
+						<span class="status-heading" id="statusHeading"
+							>Checking...</span
+						>
+						<div class="status-verification">
+							<div
+								class="verification-status"
+								id="verificationStatus"
+							>
+								<span
+									class="verification-label"
+									id="verificationLabel"
+									>Loading...</span
+								>
+							</div>
+						</div>
+						<span class="status-explanation" id="statusExplanation"
+							>Analyzing message...</span
+						>
+					</div>
+				</div>
+			</div>
+
+			<div class="action-buttons">
+				<div class="button back">
+					<span class="text">Back</span>
+				</div>
+				<div class="button share">
+					<span class="text">Share Result</span>
+				</div>
+			</div>
+		</div>
+		<script src="result.js"></script>
+		<script src="popup.js"></script>
+	</body>
 </html>

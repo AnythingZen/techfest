@@ -1,9 +1,5 @@
 // Display output based on results
 function updateVerificationStatus(isVerified) {
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = chrome.runtime.getURL("styles/result.css");
-    document.head.appendChild(link);
 
     console.log('updateVerificationStatus called with:', isVerified);
 	const resultStatus = document.getElementById("resultStatus");
@@ -16,7 +12,7 @@ function updateVerificationStatus(isVerified) {
 	resultStatus.style.backgroundColor = ""; // Reset background color
 	statusHeading.style.color = ""; // Reset text color
 
-	if (isVerified) {
+	if (!isVerified) {
 		// Set Verified (Green)
 		resultStatus.classList.add("verified");
 		resultStatus.style.backgroundColor = "rgba(46, 125, 50, 0.1)"; // Light green background
@@ -33,20 +29,14 @@ function updateVerificationStatus(isVerified) {
 		verificationLabel.textContent = "Unverified";
 		statusExplanation.textContent = "Explanation of why it is unauthentic.";
 	}
+    
 }
 function resetVerificationStatus() {
-	const resultStatus = document.getElementById("resultStatus");
-	const statusHeading = document.getElementById("statusHeading");
-	const verificationLabel = document.getElementById("verificationLabel");
-	const statusExplanation = document.getElementById("statusExplanation");
-
-	// Reset styles and content
-	resultStatus.classList.remove("verified", "unverified");
-	resultStatus.style.backgroundColor = ""; // Reset background color
-	statusHeading.style.color = ""; // Reset text color
-	statusHeading.textContent = "Verification Status";
-	verificationLabel.textContent = "Status: Pending";
-	statusExplanation.textContent = "Waiting for results...";
+    // Reset the verification status UI
+    const resultContainer = document.getElementById("fact-check-result-container");
+    if (resultContainer) {
+        resultContainer.remove();
+    }
 }
 
 export { updateVerificationStatus, resetVerificationStatus };

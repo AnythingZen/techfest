@@ -1,56 +1,52 @@
 (async function () {
-    // Inject the result UI into the webpage
-    async function injectResultUI() {
-        // Fetch result.html from your extension's files
-        const response = await fetch(chrome.runtime.getURL('result.html'));
-        const html = await response.text();
+	// Inject the result UI into the webpage
+	async function injectResultUI() {
+		// Fetch result.html from your extension's files
+		const response = await fetch(chrome.runtime.getURL("result.html"));
+		const html = await response.text();
 
-        // Create a container div for the result UI
-        const resultContainer = document.createElement('div');
-        resultContainer.id = 'fact-check-result-container';
-        resultContainer.innerHTML = html;
+		// Create a container div for the result UI
+		const resultContainer = document.createElement("div");
+		resultContainer.id = "fact-check-result-container";
+		resultContainer.innerHTML = html;
 
-        // Append to the webpage
-        document.body.appendChild(resultContainer);
-        console.log('Injected result UI:', resultContainer) 
-    }
+		document.body.appendChild(resultContainer);
+		console.log("Injected result UI:", resultContainer);
+	}
 
-    // Import the functions from result.js
-    const { updateVerificationStatus, resetVerificationStatus } = await import(
-        chrome.runtime.getURL('result.js')
-    );
-    console.log('Imported updateVerificationStatus:', updateVerificationStatus)
+	// Import the functions from result.js
+	const { updateVerificationStatus, resetVerificationStatus } = await import(
+		chrome.runtime.getURL("result.js")
+	);
+	console.log("Imported updateVerificationStatus:", updateVerificationStatus);
 
-    // Inject the result UI
-    await injectResultUI();
+	// State object to track selection
+	const snippingState = {
+		isSelecting: false,
+		startX: 0,
+		startY: 0,
+	};
 
-    // State object to track selection
-    const snippingState = {
-        isSelecting: false,
-        startX: 0,
-        startY: 0,
-    };
+	// Check if overlay already exists
+	if (!document.getElementById("snipping-overlay")) {
+		createOverlay();
+	}
 
-    // Check if overlay already exists
-    if (!document.getElementById('snipping-overlay')) {
-        createOverlay();
-    }
+	// Create the snipping overlay
+	function createOverlay() {
+		// Remove existing overlay if any
+		const existingOverlay = document.getElementById("snipping-overlay");
+		if (existingOverlay) existingOverlay.remove();
 
-    // Create the snipping overlay
-    function createOverlay() {
-        // Remove existing overlay if any
-        const existingOverlay = document.getElementById('snipping-overlay');
-        if (existingOverlay) existingOverlay.remove();
+		// Reset state for new session
+		snippingState.isSelecting = false;
+		snippingState.startX = 0;
+		snippingState.startY = 0;
 
-        // Reset state for new session
-        snippingState.isSelecting = false;
-        snippingState.startX = 0;
-        snippingState.startY = 0;
-
-        // Create overlay div
-        const overlay = document.createElement('div');
-        overlay.id = 'snipping-overlay';
-        overlay.style.cssText = `
+		// Create overlay div
+		const overlay = document.createElement("div");
+		overlay.id = "snipping-overlay";
+		overlay.style.cssText = `
             position: fixed;
             top: 0;
             left: 0;
@@ -61,141 +57,147 @@
             z-index: 999999;
         `;
 
-        // Create selection rectangle
-        const selection = document.createElement('div');
-        selection.style.cssText = `
+		// Create selection rectangle
+		const selection = document.createElement("div");
+		selection.style.cssText = `
             position: absolute;
             border: 2px solid red;
             background: rgba(255, 0, 0, 0.3);
             display: none;
         `;
 
-        overlay.appendChild(selection);
-        document.body.appendChild(overlay);
+		overlay.appendChild(selection);
+		document.body.appendChild(overlay);
 
-        // Add event listeners
-        overlay.addEventListener('mousedown', startSelection);
-        overlay.addEventListener('mousemove', updateSelection);
-        overlay.addEventListener('mouseup', endSelection);
-    }
+		// Add event listeners
+		overlay.addEventListener("mousedown", startSelection);
+		overlay.addEventListener("mousemove", updateSelection);
+		overlay.addEventListener("mouseup", endSelection);
+	}
 
-    // Start selection
-    function startSelection(e) {
-        snippingState.isSelecting = true;
-        snippingState.startX = e.clientX;
-        snippingState.startY = e.clientY;
+	// Start selection
+	function startSelection(e) {
+		snippingState.isSelecting = true;
+		snippingState.startX = e.clientX;
+		snippingState.startY = e.clientY;
 
-        const selection = document.querySelector('#snipping-overlay div');
-        selection.style.left = `${snippingState.startX}px`;
-        selection.style.top = `${snippingState.startY}px`;
-        selection.style.width = '0';
-        selection.style.height = '0';
-        selection.style.display = 'block';
-    }
+		const selection = document.querySelector("#snipping-overlay div");
+		selection.style.left = `${snippingState.startX}px`;
+		selection.style.top = `${snippingState.startY}px`;
+		selection.style.width = "0";
+		selection.style.height = "0";
+		selection.style.display = "block";
+	}
 
-    // Update selection
-    function updateSelection(e) {
-        if (!snippingState.isSelecting) return;
+	// Update selection
+	function updateSelection(e) {
+		if (!snippingState.isSelecting) return;
 
-        const selection = document.querySelector('#snipping-overlay div');
-        const currentX = e.clientX;
-        const currentY = e.clientY;
-        const width = currentX - snippingState.startX;
-        const height = currentY - snippingState.startY;
+		const selection = document.querySelector("#snipping-overlay div");
+		const currentX = e.clientX;
+		const currentY = e.clientY;
+		const width = currentX - snippingState.startX;
+		const height = currentY - snippingState.startY;
 
-        selection.style.left = (width < 0 ? currentX : snippingState.startX) + 'px';
-        selection.style.top = (height < 0 ? currentY : snippingState.startY) + 'px';
-        selection.style.width = `${Math.abs(width)}px`;
-        selection.style.height = `${Math.abs(height)}px`;
-    }
+		selection.style.left =
+			(width < 0 ? currentX : snippingState.startX) + "px";
+		selection.style.top =
+			(height < 0 ? currentY : snippingState.startY) + "px";
+		selection.style.width = `${Math.abs(width)}px`;
+		selection.style.height = `${Math.abs(height)}px`;
+	}
 
-    // End selection
-    function endSelection(e) {
-        snippingState.isSelecting = false;
+	// End selection
+	function endSelection(e) {
+		snippingState.isSelecting = false;
 
-        const rect = {
-            x: Math.min(snippingState.startX, e.clientX),
-            y: Math.min(snippingState.startY, e.clientY),
-            width: Math.abs(e.clientX - snippingState.startX),
-            height: Math.abs(e.clientY - snippingState.startY),
-        };
+		const rect = {
+			x: Math.min(snippingState.startX, e.clientX),
+			y: Math.min(snippingState.startY, e.clientY),
+			width: Math.abs(e.clientX - snippingState.startX),
+			height: Math.abs(e.clientY - snippingState.startY),
+		};
 
-        // Remove overlay
-        const overlay = document.getElementById('snipping-overlay');
-        overlay.remove();
+		// Remove overlay
+		const overlay = document.getElementById("snipping-overlay");
+		overlay.remove();
 
-        // Request screenshot from background
-        chrome.runtime.sendMessage(
-            { action: 'captureScreenshot', rect },
-            (response) => processScreenshot(response.dataUrl, rect)
-        );
-    }
+		// Request screenshot from background
+		chrome.runtime.sendMessage(
+			{ action: "captureScreenshot", rect },
+			(response) => processScreenshot(response.dataUrl, rect)
+		);
+	}
 
-    // Process the screenshot
-    function processScreenshot(dataUrl, rect) {
-        const img = new Image();
-        img.onload = () => {
-            const dpr = window.devicePixelRatio;
-            const scaledRect = {
-                x: rect.x * dpr,
-                y: rect.y * dpr,
-                width: rect.width * dpr,
-                height: rect.height * dpr,
-            };
+	// Process the screenshot
+	function processScreenshot(dataUrl, rect) {
+		const img = new Image();
+		img.onload = () => {
+			const dpr = window.devicePixelRatio;
+			const scaledRect = {
+				x: rect.x * dpr,
+				y: rect.y * dpr,
+				width: rect.width * dpr,
+				height: rect.height * dpr,
+			};
 
-            const canvas = document.createElement('canvas');
-            canvas.width = scaledRect.width;
-            canvas.height = scaledRect.height;
-            const ctx = canvas.getContext('2d');
+			const canvas = document.createElement("canvas");
+			canvas.width = scaledRect.width;
+			canvas.height = scaledRect.height;
+			const ctx = canvas.getContext("2d");
 
-            if (!canvas || !ctx) {
-                console.error('Canvas or context is invalid');
-                return;
-            }
+			if (!canvas || !ctx) {
+				console.error("Canvas or context is invalid");
+				return;
+			}
 
-            ctx.drawImage(
-                img,
-                scaledRect.x,
-                scaledRect.y,
-                scaledRect.width,
-                scaledRect.height,
-                0,
-                0,
-                scaledRect.width,
-                scaledRect.height
-            );
+			ctx.drawImage(
+				img,
+				scaledRect.x,
+				scaledRect.y,
+				scaledRect.width,
+				scaledRect.height,
+				0,
+				0,
+				scaledRect.width,
+				scaledRect.height
+			);
 
-            canvas.toBlob((blob) => {
-                if (!blob) {
-                    console.error('Failed to create Blob from canvas');
-                    return;
-                }
+			canvas.toBlob((blob) => {
+				if (!blob) {
+					console.error("Failed to create Blob from canvas");
+					return;
+				}
 
-                const formData = new FormData();
-                formData.append('image', blob, 'snip.png');
+				const formData = new FormData();
+				formData.append("image", blob, "snip.png");
 
-                fetch('https://fa67-34-169-158-172.ngrok-free.app/predict', {
-                    method: 'POST',
-                    body: formData,
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log('Response from backend:', data);
-                        updateVerificationStatus(data.isDeepfake); // Update the injected UI
-                        setTimeout(() => {
-                            resetVerificationStatus(); // Reset after 3 seconds
-                        }, 3000);
-                    })
-                    .catch((error) => {
-                        console.error('Error sending image to backend:', error);
-                    });
-            }, 'image/png');
-        };
+				fetch("https://fa67-34-169-158-172.ngrok-free.app/predict", {
+					method: "POST",
+					body: formData,
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						console.log("Response from backend:", data);
 
-        img.onerror = () => {
-            console.error('Failed to load the image');
-        };
+						// Inject the result UI and wait for it to complete before updating status
+						injectResultUI().then(() => {
+							updateVerificationStatus(data.isDeepfake); // Update the injected UI
+							setTimeout(() => {
+								resetVerificationStatus(); // Reset after 3 seconds
+							}, 6000);
+						});
+					})
+					.catch((error) => {
+						console.error("Error sending image to backend:", error);
+					});
+			}, "image/png");
+		};
 
-        img.src = dataUrl;
-    }
+		img.onerror = () => {
+			console.error("Failed to load the image");
+		};
+
+		img.src = dataUrl;
+	}
 })();
